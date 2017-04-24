@@ -118,8 +118,8 @@ if(strlen($bookid) == 0){
             }
 
             if (flag == 1) {
-                $("#sidebar").animate({"width":"200px"}, 500).show()
-                $("#slide-btn").animate({"left":"200px"}, 500)
+                $("#sidebar").animate({"width":"160px"}, 500).show()
+                $("#slide-btn").animate({"left":"160px"}, 500)
                 $("#content").animate({"padding":"0 0 0 350px"}, 500)
                 $("#toggle-question-status").show(500);
                 flag = 2

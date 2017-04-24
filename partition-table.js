@@ -1,19 +1,23 @@
 // set the url for get user progress
 progress_url = progress_url + "?usr="+usr+"&grp="+grp+"&sid="+sid+"&mode=all"
+
+console.log(progress_url);
 var question_coords=[];
-var question_in = [];
-var question_in2 = [];
+var question_coords2=[];
+
 
 $.ajax({
     url: progress_url,
     async:false,
     success:function (result) {
         // get user progress and paint partition table
+        console.log(result);
         var docAmount = result.progress.length;
         var countDoc = 0;
         var diagram = [];
         for (countDoc = 0; countDoc < docAmount; countDoc++) {
             var uprogress = result.progress[countDoc].uprogress;
+            console.log(uprogress);
             if (uprogress >= 0 && uprogress < 0.1) {
                 var theColor = colors[0];
             }
@@ -78,15 +82,17 @@ $.ajax({
         .value(function(d) { return 1;});//return d.epage-d.spage+1; });
 
     var svg_comp = d3.select("#partition-table").append("svg")
+        .attr("id","svg_comp")
         .attr("width", w)
         .attr("height", h)
         .style("margin-left","20px");
 
     var svg2 = d3.select("#partition-table").append("svg")
+        .attr("id","svg2")
         .attr("class","svg")
         .attr("width", w)
         .attr("height", h)
-        .style("margin-left","-35px");
+        .style("margin-left","9px");
         //.attr("translate(100 0)");
         //.style("background","#898989");
         //.style("margin-top","-15px");
@@ -95,6 +101,7 @@ $.ajax({
     var rect = svg2.selectAll("rect");
 
     d3.json(json_file,function(error, root) {
+        console.log(root);
       //if (error) throw error;
       var separation = 1;
       var y_separation = 0;
@@ -170,7 +177,7 @@ $.ajax({
           .attr("height", function(d) { return y(d.dy); })
           */
           .attr("x", function(d) { 
-                return x_comp(d.y)-d.depth*separation;
+                return x_comp(d.y)-d.depth*separation + 40;
                 //return d.depth*(separation+widthLayer);
             })                          
           .attr("y", function(d) { return y(d.x)+y_separation; })
@@ -205,24 +212,24 @@ $.ajax({
           .on("mouseover",partitionTableMouseover)
           .on("mouseout",partitionTableMouseout);
 
-        var subsections = svg2.selectAll("g.partition_depth_2");
+        // var subsections = svg2.selectAll("g.partition_depth_2");
 
-        subsections.append("circle")
-            .attr("cx", function (d,i) { 
-                /*if (i%2){
-                    return x(d.y)+x(d.dy)+40;
-                }else{
-                    return x(d.y)+40;
-                }*/
-                //return (x(d.y)+x(d.dy)/2+(separation*2)-1.5);
-                return (x(d.y)+x(d.dy)/2+(separation*2)-1.5);
-            })
-            .attr("cy", function (d,i) { return y(d.x)+(y(d.dx)/2); })
-            .attr("r", 2)
-            .style("fill", "#c5c5c5")
-            //.attr("stroke-width","0.5px")
-            //.style("stroke", "black")
-            .style("z-index","1000");
+        // subsections.append("circle")
+        //     .attr("cx", function (d,i) { 
+        //         /*if (i%2){
+        //             return x(d.y)+x(d.dy)+40;
+        //         }else{
+        //             return x(d.y)+40;
+        //         }*/
+        //         //return (x(d.y)+x(d.dy)/2+(separation*2)-1.5);
+        //         return (x(d.y)+x(d.dy)/2+(separation*2)-1.5);
+        //     })
+        //     .attr("cy", function (d,i) { return y(d.x)+(y(d.dx)/2); })
+        //     .attr("r", 2)
+        //     .style("fill", "#c5c5c5")
+        //     //.attr("stroke-width","0.5px")
+        //     //.style("stroke", "black")
+        //     .style("z-index","1000");
 
         /*subsections.append("text")
                 .attr("dx", function(d){return x(d.y)+x(d.dy)/2+(separation*2)-3.5;})
@@ -242,6 +249,28 @@ $.ajax({
                 }*/
                 //return x(d.y)+x(d.dy)/2+(separation*4)-1.5;
                 return (Math.random()*30)+(1.7*x(d.y))+(separation*4)-1.5;
+            })
+            .attr("cy", function (d,i) { return y(d.x)+(y(d.dx)/2); })
+            .attr("r", 2)
+            .style("fill", "#c5c5c5")
+            //.attr("stroke-width","0.5px")
+            //.style("stroke", "black")
+            .style("z-index","1000");
+
+
+
+        var subsections4 = svg_comp.selectAll("g.partition_depth_3");
+
+
+        subsections4.append("circle")
+            .attr("cx", function (d,i) { 
+                /*if (i%2){
+                    return x(d.y)+x(d.dy)+40;
+                }else{
+                    return x(d.y)+40;
+                }*/
+                //return x(d.y)+x(d.dy)/2+(separation*4)-1.5;
+                return -(Math.random()*30+1)+(x(d.y))+(separation*4)-1.5;
             })
             .attr("cy", function (d,i) { return y(d.x)+(y(d.dx)/2); })
             .attr("r", 2)
@@ -280,16 +309,35 @@ $.ajax({
           var x_val = el.getAttribute('cx');//get cx
           var y_val = el.getAttribute('cy');//get cy
 
-          console.log(x_val);
-          console.log(y_val);
+          //console.log(x_val);
+          //console.log(y_val);
 
-           if(x_val > 40.5){
-              question_coords.push({"y": y_val, "x": x_val});
-              question_in.push({"y": y_val});
-              question_in2.push({"x": x_val});
+           if(x_val > 84){
+                question_coords.push({"y": y_val, "x": x_val});             
+              //question_in.push({"y": y_val});
+              //question_in2.push({"x": x_val});
+           }else if(x_val < 50){
+                question_coords2.push({"y": y_val, "x": x_val});
            }
 
         });
+
+
+        // $('circle').each(function(idx, el){//go through each circle
+
+        //   var x_val = el.getAttribute('cx');//get cx
+        //   var y_val = el.getAttribute('cy');//get cy
+
+        //   //console.log(x_val);
+        //   //console.log(y_val);
+
+        //    if(x_val < 50){
+        //       question_coords.push({"y": y_val, "x": x_val});             
+        //       //question_in.push({"y": y_val});
+        //       //question_in2.push({"x": x_val});
+        //    }
+
+        // });
 
    
         var lectures = svg2.selectAll("g.partition_depth_1");
@@ -515,9 +563,9 @@ $.ajax({
                 // var test2 = [238, 258, 294, 310, 376];
 
 
-                var xScale = d3.scale.linear()
-                    .domain([0, d3.max(question_coords, function(d){ return d.x; })])
-                    .range([0, w]);
+                // var xScale = d3.scale.linear()
+                //     .domain([0, d3.max(question_coords, function(d){ return d.x; })])
+                //     .range([0, w]);
 
                 // var xScale = d3.scale.linear()
                 //     .domain(question_in2)
@@ -527,13 +575,15 @@ $.ajax({
                 //     .domain(question_in)
                 //     .rangePoints(question_in);
 
-                var yScale = d3.scale.linear()
-                    .domain([0, d3.max(question_coords, function(d){ return d.y; })])
-                    .range([0, h]);
-
+                // var yScale = d3.scale.linear()
+                //     .domain([0, d3.max(question_coords, function(d){ return d.y; })])
+                //     .range([0, h]);
+                //console.log(question_coords);
                 var line = d3.svg.line()
-                    .x(function(d) { return xScale(d.x - 15); })
-                    .y(function(d) { return yScale(d.y - 11); });
+                    /*.x(function(d) { return xScale(d.x - 15); })
+                    .y(function(d) { return yScale(d.y - 11); });*/
+                    .y(function(d){ return d.y})
+                    .x(function(d){ return d.x});
 
                     // console.log("start");
                     // console.log(question_coords);
@@ -542,9 +592,27 @@ $.ajax({
                     
 
                 svg2.append("path")
+                    .attr("id","line")
                     .data([question_coords])
                     .style("fill", "none")
-                    .style("stroke", "black")
+                    .style("stroke", "gray")
+                    .style("stroke-width",0.5)
+                    .attr("d", line);
+
+
+                // var line2 = d3.svg.line()
+                //     .x(function(d) { return xScale(d.x - 15); })
+                //     .y(function(d) { return yScale(d.y - 11); });
+                //     .y(function(d){ return d.y})
+                //     .x(function(d){ return d.x});
+
+
+                svg_comp.append("path")
+                    .attr("id","line2")
+                    .data([question_coords2])
+                    .style("fill", "none")
+                    .style("stroke", "gray")
+                    .style("stroke-width",0.5)
                     .attr("d", line);
 
 

@@ -5,6 +5,7 @@ $config_dbHost = "localhost";
 //$config_dbUser = "eraeder";
 //$config_dbPass = "eraederpass";
 $config_dbUser = "root";
+// $config_dbPass = "!!c0lumbu5rec5y5!!";
 $config_dbPass = "123456";
 $config_dbName = "readingcircle_dev";
 $config_dbPort = "3306";
